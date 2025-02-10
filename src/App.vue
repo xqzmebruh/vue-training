@@ -9,27 +9,18 @@
 </div>
 </template>
 
-<script>
+<script setup>
+import {ref} from 'vue'
 import UserForm from './components/UserForm.vue';
 import UserList from './components/UserList.vue';
-export default{
-    components: {
-        UserForm,UserList
-    },
- data() {
-     return{
-         users :[
+   
+        const users = ref([
              {id: 1, userName: 'test', userSurname: 'testov', userLastname: 'testovich', dateOfBirth: '00.00.1989'}
-         ],
-     }
- },
-  methods: {
-        createUser(user){
+         ])
+         
+        const createUser = (user) =>{
             this.users.push(user);
-        },
-       
-     }
-}
+        };
 </script>
 
 <style>

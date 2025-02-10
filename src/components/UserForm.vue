@@ -43,32 +43,30 @@
     </div>
 </template>
 
-<script>
-    export default {
-        data(){
-            return{
-                user:{
+<script setup>
+import {ref} from 'vue'
+               const user = ref({
                     userName: '',
                     userSurname: '',
                     userLastname: '',
                     dateOfBirth: '',
-                }
-            }
-        },
-        methods:{
-            createUser(){
-            this.user.id = Date.now();
-            this.$emit('create', this.user)
-            this.user = {
+                })
+            
+            const emit = defineEmits(['createUser'])
+
+            const createUser = () => {
+            user.value.id = Date.now();
+            emit('create')
+            user.value = {
             userName : '',
             userSurname : '',
             userLastname : '',
             dateOfBirth : '',
             }
         }
-        }
         
-    }
+        
+    
 </script>
 
 <style scoped>

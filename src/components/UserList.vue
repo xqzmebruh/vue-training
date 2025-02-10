@@ -10,17 +10,16 @@
     
 </template>
 
-<script>
+<script setup>
 import UserItem from './UserItem.vue';
-    export default {
-        components: {UserItem},
-        props:{
+
+        defineProps({
             users:{
                 type: Array,
                 required: true
             }
-        }
-    }
+        })
+    
 </script>
 
 <style scoped>
