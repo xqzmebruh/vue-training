@@ -3,29 +3,43 @@
     <div class="userform">
       <div class="textbox">
         <strong>Имя</strong>
-        <input v-model="user.userName" class="inp" type="text" @input="validateName('userName')" />
+        <input v-model="user.userName"
+        class="inp"
+        type="text"
+        />
         <span v-if="errors.userName" class="error">{{ errors.userName }}</span>
       </div>
       <div class="textbox">
-
         <strong>Фамилия</strong>
-        <input v-model="user.userSurname" class="inp" type="text" @input="validateName('userSurname')" />
+        <input
+          v-model="user.userSurname"
+          class="inp"
+          type="text"
+        />
         <span v-if="errors.userSurname" class="error">{{ errors.userSurname }}</span>
       </div>
 
       <div class="textbox">
         <strong>Отчество</strong>
-        <input v-model="user.userLastname" class="inp" type="text" @input="validateName('userLastname')" />
+        <input
+          v-model="user.userLastname"
+          class="inp"
+          type="text"
+        />
         <span v-if="errors.userLastname" class="error">{{ errors.userLastname }}</span>
       </div>
 
       <div class="textbox">
         <strong>Дата рождения</strong>
-        <input v-model="user.dateOfBirth" class="inp" type="date" @input="validateName('dateOfBirth')" />
+        <input
+          v-model="user.dateOfBirth"
+          class="inp"
+          type="date"
+        />
         <span v-if="errors.dateOfBirth" class="error">{{ errors.dateOfBirth }}</span>
       </div>
 
-      <button class="btn" @click="createUser" :disabled="!isFormValid">Создать</button>
+      <button class="btn" @click="createUser">Создать</button>
     </div>
   </div>
 </template>
@@ -56,34 +70,39 @@ const errors = ref<Record<string, string>>({
   dateOfBirth: '',
 })
 
-const validateName = (field: keyof User) => {
+const validateFunc = (field: keyof User): string => {
   const value = user.value[field] as string
-  if (!value.trim()){
-    errors.value[field] = 'Поле обязательно для заполнения';
+
+  if (!value.trim()) {
+    return 'Поле обязательно для заполнения'
   }
-  else if (field!== 'dateOfBirth' && /\d/.test(value)){
-    errors.value[field] = 'Поле недолжно содержать цифр';
+
+  if (field !== 'dateOfBirth' && /\d/.test(value)) {
+    return 'Поле недолжно содержать цифр'
   }
-  else{
-    errors.value[field] = ''
-  }
+
+  return ''
+
 }
 
-const isFormValid= computed(() =>{
-  return(
-    !errors.value.userName &&
-    !errors.value.userSurname &&
-    !errors.value.userLastname&&
-    user.value.userName.trim() !== '' &&
-    user.value.userSurname.trim() !== '' &&
-    user.value.userLastname.trim() !== ''
-  );
+const isFormValid = (): boolean => {
+  let isValid = true
+
+  Object.keys(user.value).forEach((field) => {
+    const error = validateFunc(field as keyof User)
+    errors.value[field] = error
+
+    if (error && field !== 'dateOfBirth') {
+      isValid = false
+    }
 })
+  return isValid
+}
 
 const emit = defineEmits<{ create: [User] }>()
 
 const createUser = () => {
-  if (!isFormValid.value) return
+  if (!isFormValid()) return
 
   user.value.id = Date.now()
   emit('create', user.value)
@@ -122,10 +141,10 @@ const createUser = () => {
   color: teal;
 }
 
-.btn:hover{
+.btn:hover {
   cursor: pointer;
   border: 1px solid forestgreen;
-  color:black;
+  color: black;
 }
 
 .inp {
@@ -133,7 +152,7 @@ const createUser = () => {
   padding-bottom: 3px;
   padding-top: 3px;
 }
-.error{
+.error {
   color: red;
   font-size: 1em;
 }
